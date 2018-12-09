@@ -1,37 +1,44 @@
-import json, hmac, hashlib, time, requests, base64
-from requests.auth import AuthBase
+import json
+import hmac
+import hashlib
+import time
+import base64
+import requests
 
 
-# Create custom authentication for Exchange
-class CoinbaseExchangeAuth(AuthBase):
-    def __init__(self, api_key, secret_key, passphrase):
+class CoinbaseClient():
+    def __init__(self, api_key, secret_key, passphrase, url):
         self.api_key = api_key
         self.secret_key = secret_key
         self.passphrase = passphrase
+        self.url = url
 
-    def __call__(self, request):
+    def create_order(self, order):
+        path = '/orders'
+        return self._make_request('POST', path, data=order)
+
+    def get_accounts(self):
+        path = '/accounts'
+        return self._make_request('GET', path)
+
+    def _make_request(self, method, path, data=None):
         timestamp = str(time.time())
-        # if request.body:
-        #     b = base64.b64encode(request.body).decode()
-        # else:
-        #     b = ''
-        message = timestamp + request.method + request.path_url + (request.body or '')
+        message = timestamp + method + path
+        if data:
+            message = message + json.dumps(data)
+
         hmac_key = base64.b64decode(self.secret_key)
-        print('YYY message: ', message)
-        print('XXX message: ', type(message))
-        print('XXX hmac_key: ', type(hmac_key))
         signature = hmac.new(hmac_key, message.encode(), hashlib.sha256)
-        # signature_b64 = signature.digest().encode('base64').rstrip('\n')
         signature_b64 = base64.b64encode(signature.digest()).decode().rstrip('\n')
-        print('XXX signature: ', signature_b64)
 
-        request.headers.update({
-
+        headers = {
            'CB-ACCESS-SIGN': signature_b64,
             'CB-ACCESS-TIMESTAMP': timestamp,
             'CB-ACCESS-KEY': self.api_key,
             'CB-ACCESS-PASSPHRASE': self.passphrase,
             'Content-Type': 'application/json'
-        })
-        return request
+        }
+        url = self.url + path
+        # TODO: Handle error cases
+        return requests.request(method, url, json=data, headers=headers)
 
