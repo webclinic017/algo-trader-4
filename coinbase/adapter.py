@@ -1,7 +1,3 @@
-import requests
-from pprint import pprint
-import json
-
 from coinbase.client import CoinbaseClient
 from config import coinbase
 
@@ -15,14 +11,15 @@ class CoinbaseAdapter():
                                      coinbase['url'])
 
     def get_accounts(self):
-        response = self.client.get_accounts()
+        return self.client.get_accounts()
 
     def create_order(self):
         # TODO: Make orders dict a param.
+
         order = {
             'size': 1.0,
             'price': 1.0,
             'side': 'buy',
             'product_id': 'BTC-USD',
         }
-        response = self.client.create_order(order)
+        return self.client.create_order(order)
