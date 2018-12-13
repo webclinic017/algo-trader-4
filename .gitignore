@@ -3,3 +3,4 @@
 *.pyo
 __pycache__
 .mypy_cache/
+Pipfile*

@@ -4,6 +4,9 @@ import hashlib
 import time
 import base64
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CoinbaseClient():
@@ -13,12 +16,20 @@ class CoinbaseClient():
         self.passphrase = passphrase
         self.url = url
 
-    def create_order(self, order):
+    def submit_order(self, order):
         path = '/orders'
         return self._make_request('POST', path, data=order)
 
     def get_accounts(self):
         path = '/accounts'
+        return self._make_request('GET', path)
+
+    def get_order(self, order_id):
+        path = '/orders/%s' % order_id
+        return self._make_request('GET', path)
+
+    def get_account(self, account_id):
+        path = '/accounts' + '/' + account_id
         return self._make_request('GET', path)
 
     def _make_request(self, method, path, data=None):
@@ -39,5 +50,17 @@ class CoinbaseClient():
             'Content-Type': 'application/json'
         }
         url = self.url + path
-        # TODO: Handle error cases
-        return requests.request(method, url, json=data, headers=headers)
+        try:
+            response = requests.request(method, url, json=data, headers=headers)
+        except Exception as e:
+            logger.error('Error during connection %s', e)
+            return
+
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            logger.error('HTTP error %s', e)
+            print(e)
+            return
+
+        return response
