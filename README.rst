@@ -16,4 +16,4 @@ Order Checker
 
 ::
 
-  python -m algotrader.consumer --logging-level debug
+  python -m algotrader.checker --logging-level debug
