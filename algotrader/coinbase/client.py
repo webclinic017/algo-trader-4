@@ -4,9 +4,8 @@ import hashlib
 import time
 import base64
 import requests
-import logging
 
-logger = logging.getLogger(__name__)
+from algotrader import logger
 
 
 class CoinbaseClient():

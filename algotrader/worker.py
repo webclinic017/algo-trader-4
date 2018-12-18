@@ -1,13 +1,10 @@
 import json
-import logging
-from logging.config import fileConfig
 import boto3
-from config import aws as aws_config
-from order.manager import OrderManager
 
-# init logger
-fileConfig('logging_config.ini')
-logger = logging.getLogger(__name__)
+from algotrader.config import aws as aws_config
+from algotrader.order.manager import OrderManager
+from algotrader import logger
+
 
 sqs = boto3.resource('sqs')
 queue = sqs.get_queue_by_name(QueueName=aws_config['dev']['sqs']['queue-name'])

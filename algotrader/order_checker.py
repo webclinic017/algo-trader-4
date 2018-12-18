@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-from order.manager import OrderManager
+from algotrader.order.manager import OrderManager
 
 
 client = MongoClient('localhost', 27017)

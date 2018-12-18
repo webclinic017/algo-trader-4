@@ -1,14 +1,10 @@
-import logging
-from logging.config import fileConfig
 from decimal import Decimal, ROUND_DOWN
-from coinbase.adapter import CoinbaseAdapter
-from config import aws as aws_config
-from utils.common_utils import CommonUtils
-from database.mongo_helper import Signal, Order
 
-# init logger
-fileConfig('logging_config.ini')
-logger = logging.getLogger(__name__)
+from algotrader.coinbase.adapter import CoinbaseAdapter
+from algotrader.config import aws as aws_config
+from algotrader.utils.common_utils import CommonUtils
+from algotrader.database.mongo_helper import Signal, Order
+from algotrader import logger
 
 
 class OrderManager():

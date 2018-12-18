@@ -1,7 +1,9 @@
 import json
 import boto3
-from coinbase.client import CoinbaseClient
-from config import aws as aws_config
+
+from algotader.coinbase.client import CoinbaseClient
+from algotrader.config import aws as aws_config
+
 
 s3_client = boto3.resource('s3')
 
