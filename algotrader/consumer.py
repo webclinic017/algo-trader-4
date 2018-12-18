@@ -5,6 +5,8 @@ from algotrader import logger
 
 
 def main():
+    # TODO: Add source argument such as SQS or file (for test purposes)
+    # TODO: Add target argument such as mongodb, mysql, redis etc.
     parser = argparse.ArgumentParser()
     parser.add_argument('--logging-level',
                         default='info',

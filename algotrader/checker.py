@@ -5,6 +5,7 @@ from algotrader import logger
 
 
 def main():
+    # TODO: Add source argument
     parser = argparse.ArgumentParser()
     parser.add_argument('--logging-level',
                         default='info',
