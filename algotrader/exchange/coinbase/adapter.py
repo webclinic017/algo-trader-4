@@ -1,7 +1,7 @@
 import json
 import boto3
 
-from algotader.coinbase.client import CoinbaseClient
+from algotrader.exchange.coinbase.client import CoinbaseClient
 from algotrader.config import aws as aws_config
 
 
@@ -42,7 +42,29 @@ class CoinbaseAdapter():
         return response.json()
 
     def get_order(self, order_id):
+        """
+        Example order response;
+        {
+            'id': 'ce110d8d-14e4-406a-98e9-6d089158e902',
+            'size': '0.95090000',
+            'product_id': 'ETH-USD',
+            'side': 'sell',
+            'type': 'market',
+            'post_only': False,
+            'created_at': '2018-12-13T11:27:50.061553Z',
+            'done_at': '2018-12-13T11:27:50.093Z',
+            'done_reason': 'filled',
+            'fill_fees': '0.1711620000000000',
+            'filled_size': '0.95090000',
+            'executed_value': '57.0540000000000000',
+            'status': 'done',
+            'settled': True}
+        """
         response = self.client.get_order(order_id)
+        return response.json()
+
+    def get_fills(self, order_id):
+        response = self.client.get_fills(order_id)
         return response.json()
 
     def submit_order(self, order):

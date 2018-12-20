@@ -1,6 +1,6 @@
 from decimal import Decimal, ROUND_DOWN
 
-from algotrader.coinbase.adapter import CoinbaseAdapter
+from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
 from algotrader.config import aws as aws_config
 from algotrader.utils.common_utils import CommonUtils
 from algotrader.database.mongo_helper import Signal, Order
@@ -68,7 +68,7 @@ class OrderManager():
         persist_order.save()
 
     def get_order(self, order_obj):
-        response = self.adapter.get_order(order_obj.order_id)
+        response = self.adapter.get_order(order_obj['order_id'])
         return response
 
     # TODO: Implement

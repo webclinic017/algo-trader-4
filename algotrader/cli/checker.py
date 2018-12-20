@@ -1,7 +1,9 @@
 import argparse
+import time
 
 from algotrader.logging import setup_logging
 from algotrader import logger
+from algotrader.order.order_checker import OrderChecker
 
 
 def main():
@@ -19,6 +21,11 @@ def main():
     logger.debug('debug')
     logger.info('info')
     logger.error('error')
+    order_checker = OrderChecker()
+    while True:
+        order_checker.check_orders()
+        logger.info('Sleeping for 5 seconds...')
+        time.sleep(5)
 
 
 if __name__ == '__main__':

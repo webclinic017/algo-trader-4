@@ -31,6 +31,10 @@ class CoinbaseClient():
         path = '/accounts' + '/' + account_id
         return self._make_request('GET', path)
 
+    def get_fills(self, order_id):
+        path = '/fills?order_id={order_id}'.format(order_id=order_id)
+        return self._make_request('GET', path)
+
     def _make_request(self, method, path, data=None):
         timestamp = str(time.time())
         message = timestamp + method + path

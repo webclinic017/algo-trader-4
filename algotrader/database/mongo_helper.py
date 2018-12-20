@@ -1,4 +1,11 @@
-from mongoengine import StringField, DateTimeField, BooleanField, Document, connect
+from mongoengine import (StringField,
+                         DateTimeField,
+                         BooleanField,
+                         Document,
+                         connect,
+                         EmbeddedDocument,
+                         EmbeddedDocumentListField
+                         )
 
 connect('algotrader')
 
@@ -13,6 +20,19 @@ class Signal(Document):
     meta = {'collection': 'signals'}
 
 
+class Fill(EmbeddedDocument):
+    trade_id = StringField()
+    product_id = StringField()
+    price = StringField()
+    size = StringField()
+    order_id = StringField()
+    created_at = DateTimeField()
+    liquidity = StringField()
+    fee = StringField()
+    settled = BooleanField()
+    side = StringField()
+
+
 class Order(Document):
     signal_id = StringField(required=True)
     order_id = StringField()
@@ -24,5 +44,6 @@ class Order(Document):
     status = StringField()
     type = StringField()
     product_id = StringField()
+    fills = EmbeddedDocumentListField(Fill, default=[])
 
     meta = {'collection': 'orders', 'strict': False}
