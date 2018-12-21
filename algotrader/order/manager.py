@@ -3,7 +3,7 @@ from decimal import Decimal, ROUND_DOWN
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
 from algotrader.config import coinbase as coinbase_config
 from algotrader.database.mongo_helper import Signal, Order
-from algotrader.trade_signal import TradeSignal
+from algotrader.signal import TradeSignal
 from algotrader import logger
 
 
