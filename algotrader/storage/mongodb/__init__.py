@@ -7,10 +7,18 @@ from algotrader.storage.mongodb.models import Signal, Order
 class MongoDB(StorageBase):
 
     def __init__(self):
-        # TODO: Get params as a config.
-        self.client = MongoClient('localhost', 27017)
-        self.db = self.client['algotrader']
-        self.orders = self.db['orders']
+        # TODO: Should be config and param.
+        self.host = 'localhost'
+        self.port = 27017
+        self.db = 'algotrader'
+        self.collection = 'orders'
+
+        self.client = MongoClient(self.host, self.port)
+        self.db = self.client[self.db]
+        self.orders = self.db[self.collection]
+
+    def __repr__(self):
+        return 'MongoDB <Host: %s , Port: %s, Collection: %s>' % (self.host, self.port, self.collection)
 
     def create_signal(self, trade_signal):
         signal = Signal(signal_id=trade_signal.signal_id,

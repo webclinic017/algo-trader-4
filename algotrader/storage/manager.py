@@ -12,6 +12,9 @@ class StorageManager():
         if storage == 'mongodb':
             self.storage = MongoDB()
 
+    def __repr__(self):
+        return '<Storage: %s >' % (self.storage)
+
     def create_signal(self, trade_signal: TradeSignal):
         logger.info('Creating signal %s', trade_signal)
         self.storage.create_signal(trade_signal)

@@ -19,15 +19,12 @@ def main():
 
     setup_logging(args.logging_level)
 
-    logger.debug('debug')
-    logger.info('info')
-    logger.error('error')
-
     # TODO: DRY: Merge CLI files.
     # TODO: make this constant
     # TODO: Should be a param.
     storage = 'mongodb'
     storage_manager = StorageManager(storage)
+    logger.info('Starting storage => %s', storage_manager)
 
     order_checker = OrderChecker(storage_manager)
     while True:

@@ -26,6 +26,7 @@ def main():
     # TODO: Should be a param.
     storage = 'mongodb'
     storage_manager = StorageManager(storage)
+    logger.info('Starting storage => %s', storage_manager)
 
     receiver = Receiver(storage_manager)
     while True:
