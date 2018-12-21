@@ -2,7 +2,6 @@ from decimal import Decimal, ROUND_DOWN
 
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
 from algotrader.config import aws as aws_config
-from algotrader.utils.common_utils import CommonUtils
 from algotrader.database.mongo_helper import Signal, Order
 from algotrader import logger
 
@@ -11,6 +10,12 @@ class OrderManager():
 
     def __init__(self):
         self.adapter = CoinbaseAdapter()
+
+    def _get_base_currency(self, trading_pair):
+        return trading_pair.split('-')[0].lower()
+
+    def get_quote_currency(self, trading_pair):
+        return trading_pair.split('-')[1].lower()
 
     def process(self, trade_signal):
         """
@@ -32,10 +37,10 @@ class OrderManager():
         signal.save()
         logger.info('Persisted signal %s ', signal)
         if trade_signal['side'] == 'buy':
-            quote_currency = CommonUtils.get_quote_currency(trade_signal['product_id'])
+            quote_currency = self._get_quote_currency(trade_signal['product_id'])
             account = self.adapter.get_account(aws_config['dev']['coinbase']['accounts'][quote_currency])
         else:
-            base_currency = CommonUtils.get_base_currency(trade_signal['product_id'])
+            base_currency = self._get_base_currency(trade_signal['product_id'])
             account = self.adapter.get_account(aws_config['dev']['coinbase']['accounts'][base_currency])
 
         if trade_signal['size'] == 'all':
