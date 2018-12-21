@@ -3,7 +3,7 @@ import boto3
 
 from algotrader.config import aws as aws_config
 from algotrader.order.manager import OrderManager
-from algotrader.trade_signal import TradeSignal
+from algotrader.signal import TradeSignal
 from algotrader import logger
 
 
