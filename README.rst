@@ -4,16 +4,8 @@ algotrader
 
 Usage
 -----
-Consumer
-
 
 ::
 
-  python -m algotrader.cli.consumer --logging-level debug
+  python -m algotrader.cli --logging-level debug --worker signal-consumer
 
-
-Order Checker
-
-::
-
-  python -m algotrader.cli.checker --logging-level debug
