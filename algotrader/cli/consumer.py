@@ -2,6 +2,7 @@ import argparse
 
 from algotrader.logging import setup_logging
 from algotrader import logger
+from algotrader.signal.receiver import Receiver
 
 
 def main():
@@ -17,9 +18,11 @@ def main():
 
     setup_logging(args.logging_level)
 
-    logger.debug('debug')
-    logger.info('info')
-    logger.error('error')
+    logger.info('Consuming signals..')
+
+    receiver = Receiver()
+    while True:
+        receiver.consume()
 
 
 if __name__ == '__main__':
