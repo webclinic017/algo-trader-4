@@ -1,13 +1,14 @@
 import argparse
 
-from algotrader.logging import setup_logging
 from algotrader import logger
+from algotrader.logging import setup_logging
 from algotrader.signal.receiver import Receiver
+from algotrader.storage.manager import StorageManager
 
 
 def main():
     # TODO: Add source argument such as SQS or file (for test purposes)
-    # TODO: Add target argument such as mongodb, mysql, redis etc.
+    # TODO: Add target storage argument such as mongodb, mysql, redis etc.
     parser = argparse.ArgumentParser()
     parser.add_argument('--logging-level',
                         default='info',
@@ -20,7 +21,13 @@ def main():
 
     logger.info('Consuming signals..')
 
-    receiver = Receiver()
+    # TODO: DRY: Merge CLI files.
+    # TODO: make this constant
+    # TODO: Should be a param.
+    storage = 'mongodb'
+    storage_manager = StorageManager(storage)
+
+    receiver = Receiver(storage_manager)
     while True:
         receiver.consume()
 

@@ -9,10 +9,10 @@ from algotrader import logger
 
 class Receiver():
 
-    def __init__(self):
+    def __init__(self, storage):
         sqs = boto3.resource('sqs')
         self.queue = sqs.get_queue_by_name(QueueName=aws_config['sqs']['queue-name'])
-        self.order_manager = OrderManager()
+        self.order_manager = OrderManager(storage)
 
     # TODO: Re-consider signal structure. Remove duplications, rename order_id to signal_id etc.
     def consume(self):

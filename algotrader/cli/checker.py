@@ -1,9 +1,10 @@
 import argparse
 import time
 
-from algotrader.logging import setup_logging
 from algotrader import logger
+from algotrader.logging import setup_logging
 from algotrader.order.order_checker import OrderChecker
+from algotrader.storage.manager import StorageManager
 
 
 def main():
@@ -21,7 +22,14 @@ def main():
     logger.debug('debug')
     logger.info('info')
     logger.error('error')
-    order_checker = OrderChecker()
+
+    # TODO: DRY: Merge CLI files.
+    # TODO: make this constant
+    # TODO: Should be a param.
+    storage = 'mongodb'
+    storage_manager = StorageManager(storage)
+
+    order_checker = OrderChecker(storage_manager)
     while True:
         order_checker.check_orders()
         logger.info('Sleeping for 5 seconds...')
