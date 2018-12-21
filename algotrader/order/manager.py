@@ -3,6 +3,7 @@ from decimal import Decimal, ROUND_DOWN
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
 from algotrader.config import coinbase as coinbase_config
 from algotrader.database.mongo_helper import Signal, Order
+from algotrader.trade_signal import TradeSignal
 from algotrader import logger
 
 
@@ -11,50 +12,39 @@ class OrderManager():
     def __init__(self):
         self.adapter = CoinbaseAdapter()
 
-    def process(self, trade_signal):
-        """
-            Process the given signal.
-            Ex signal;
-            {
-                "order_id": "ETH-USD_coinbase_1543359420",
-                "product_id": "ETH-USD",
-                "type": "market",
-                "side": "sell",
-                "size": "all"
-            }
-        """
-        signal = Signal(signal_id=trade_signal['order_id'],
-                        product_id=trade_signal['product_id'],
-                        order_type=trade_signal['type'],
-                        side=trade_signal['side'],
-                        size=trade_signal['size'])
+    def process(self, trade_signal: TradeSignal):
+        signal = Signal(signal_id=trade_signal.signal_id,
+                        product_id=trade_signal.product_id,
+                        order_type=trade_signal.type,
+                        side=trade_signal.side,
+                        size=trade_signal.size)
         signal.save()
         logger.info('Persisted signal %s ', signal)
 
-        if trade_signal.side == 'buy':
-            quote_currency = trade_signal._get_quote_currency
-            account = self.adapter.get_account(coinbase_config['accounts'][quote_currency])
-        else:
-            base_currency = self._get_base_currency(trade_signal.product_id)
-            account = self.adapter.get_account(coinbase_config['accounts'][base_currency])
+        # TODO: Get rid of exchange-specific logic.
+        account = self.adapter.get_account(coinbase_config['accounts'][trade_signal.currency])
 
-        if trade_signal['size'] == 'all':
-            # get maximum amount of balance with scale of 8 digits and rounding down it.
-            size = Decimal(account['balance']).quantize(Decimal('.0001'), rounding=ROUND_DOWN)
+        # TODO: Can process only size='all'
+        # get maximum amount of balance with scale of 8 digits and rounding down it.
+        order_size = Decimal(account['balance']).quantize(Decimal('.0001'), rounding=ROUND_DOWN)
+
         order = {
-            'size': str(size),
-            'type': trade_signal.type,
+            'size': str(order_size),
+            'type': trade_signal.order_type,
             'side': trade_signal.side,
             'product_id': trade_signal.product_id,
         }
-        print('Sending order: ', order)
+        logger.info('Submitting order: %s', order)
+
         coinbase_order = self.adapter.submit_order(order)
         if coinbase_order is None:
-            print('Error coinbase_order as None')
-        coinbase_order['signal_id'] = trade_signal['order_id']
-        print('coinbase_order: ', coinbase_order)
+            logger.error('Coinbase_order is None')
+            return
+
+        logger.info('Received order: %s', coinbase_order)
+
         persist_order = Order(
-            signal_id=trade_signal['order_id'],
+            signal_id=trade_signal.order_id,
             order_id=coinbase_order['id'],
             price=coinbase_order.get('price'),
             side=coinbase_order['side'],
