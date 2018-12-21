@@ -7,13 +7,13 @@ class StorageBase():
         pass
 
     def create_signal(self):
-        pass
+        raise NotImplementedError("Subclasses should implement this!")
 
     def create_order(self):
-        pass
+        raise NotImplementedError("Subclasses should implement this!")
 
     def get_orders(self, status: list):
-        pass
+        raise NotImplementedError("Subclasses should implement this!")
 
     def update_order(self, _id: int, fills: list, status: str):
-        pass
+        raise NotImplementedError("Subclasses should implement this!")
