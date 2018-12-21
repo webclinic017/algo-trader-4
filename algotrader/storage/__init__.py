@@ -1,10 +1,9 @@
 
 
-# TODO: Raise NotImplementedError
 class StorageBase():
 
-    def __init__(self, database):
-        pass
+    def __init__(self, storage):
+        self.storage = storage
 
     def create_signal(self):
         raise NotImplementedError("Subclasses should implement this!")
