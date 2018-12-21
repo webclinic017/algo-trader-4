@@ -7,7 +7,7 @@ from algotrader import logger
 
 
 sqs = boto3.resource('sqs')
-queue = sqs.get_queue_by_name(QueueName=aws_config['dev']['sqs']['queue-name'])
+queue = sqs.get_queue_by_name(QueueName=aws_config['sqs']['queue-name'])
 order_manager = OrderManager()
 
 while True:

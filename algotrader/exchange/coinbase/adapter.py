@@ -3,24 +3,29 @@ import boto3
 
 from algotrader.exchange.coinbase.client import CoinbaseClient
 from algotrader.config import aws as aws_config
-
-
-s3_client = boto3.resource('s3')
-
-bucket_name = aws_config['dev']['s3']['bucket']
-object_key = aws_config['dev']['s3']['key']
-
-coinbase_config_s3_object = s3_client.Object(bucket_name, object_key)
-coinbase_config = json.loads(coinbase_config_s3_object.get()['Body'].read().decode('utf-8'))
+from algotrader.config import coinbase as coinbase_config
 
 
 class CoinbaseAdapter():
 
     def __init__(self):
-        self.client = CoinbaseClient(coinbase_config['accessKey'],
-                                     coinbase_config['secretKey'],
-                                     coinbase_config['passphrase'],
-                                     aws_config['dev']['coinbase']['base-endpoint'])
+        self._get_credentials()
+        self.client = CoinbaseClient(self.access_key, self.secret_key, self.passphrase, self.url)
+
+    def _get_credentials(self):
+        # Get s3 client.
+        s3_client = boto3.resource('s3')
+
+        # Get coinbase credentials.
+        s3_object = s3_client.Object(aws_config['s3']['bucket'], aws_config['s3']['key'])
+        s3_config = json.loads(s3_object.get()['Body'].read().decode('utf-8'))
+
+        # Set credentials.
+        # TODO: Re-structure these on S3, such as coninbase['accessKey']
+        self.access_key = s3_config['accessKey']
+        self.secret_key = s3_config['secretKey']
+        self.passphrase = s3_config['passphrase']
+        self.url = coinbase_config['url']
 
     def get_accounts(self):
         response = self.client.get_accounts()

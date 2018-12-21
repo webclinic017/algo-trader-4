@@ -1,7 +1,7 @@
 from decimal import Decimal, ROUND_DOWN
 
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
-from algotrader.config import aws as aws_config
+from algotrader.config import coinbase as coinbase_config
 from algotrader.database.mongo_helper import Signal, Order
 from algotrader import logger
 
@@ -10,12 +10,6 @@ class OrderManager():
 
     def __init__(self):
         self.adapter = CoinbaseAdapter()
-
-    def _get_base_currency(self, trading_pair):
-        return trading_pair.split('-')[0].lower()
-
-    def get_quote_currency(self, trading_pair):
-        return trading_pair.split('-')[1].lower()
 
     def process(self, trade_signal):
         """
@@ -36,21 +30,22 @@ class OrderManager():
                         size=trade_signal['size'])
         signal.save()
         logger.info('Persisted signal %s ', signal)
-        if trade_signal['side'] == 'buy':
-            quote_currency = self._get_quote_currency(trade_signal['product_id'])
-            account = self.adapter.get_account(aws_config['dev']['coinbase']['accounts'][quote_currency])
+
+        if trade_signal.side == 'buy':
+            quote_currency = trade_signal._get_quote_currency
+            account = self.adapter.get_account(coinbase_config['accounts'][quote_currency])
         else:
-            base_currency = self._get_base_currency(trade_signal['product_id'])
-            account = self.adapter.get_account(aws_config['dev']['coinbase']['accounts'][base_currency])
+            base_currency = self._get_base_currency(trade_signal.product_id)
+            account = self.adapter.get_account(coinbase_config['accounts'][base_currency])
 
         if trade_signal['size'] == 'all':
             # get maximum amount of balance with scale of 8 digits and rounding down it.
             size = Decimal(account['balance']).quantize(Decimal('.0001'), rounding=ROUND_DOWN)
         order = {
             'size': str(size),
-            'type': trade_signal['type'],
-            'side': trade_signal['side'],
-            'product_id': trade_signal['product_id']
+            'type': trade_signal.type,
+            'side': trade_signal.side,
+            'product_id': trade_signal.product_id,
         }
         print('Sending order: ', order)
         coinbase_order = self.adapter.submit_order(order)
