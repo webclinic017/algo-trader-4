@@ -7,5 +7,5 @@ Usage
 
 ::
 
-  python -m algotrader.cli --logging-level debug --worker signal-consumer
+  python -m algotrader.cli --logging-level debug --worker signal-consumer  --exchange coinbase
 
