@@ -4,7 +4,7 @@ import argparse
 from algotrader import logger
 from algotrader.logging import setup_logging
 from algotrader.signal.receiver import Receiver
-from algotrader.order.order_checker import OrderChecker
+from algotrader.order.checker import OrderChecker
 from algotrader.storage.manager import StorageManager
 
 
