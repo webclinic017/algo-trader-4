@@ -15,7 +15,7 @@ def setup_logging(level):
     logger.setLevel(level)
     logger.addHandler(h)
 
-    trfh = logging.handlers.TimedRotatingFileHandler('/var/logs/application.log', 'h', 1, 100)
+    trfh = logging.handlers.TimedRotatingFileHandler('/var/logs/algotrader.log', 'h', 1, 100)
     trfh.setLevel(level)
     trfh.setFormatter(logging.Formatter(FORMAT))
     logger.addHandler(trfh)
