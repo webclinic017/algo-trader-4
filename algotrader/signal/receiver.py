@@ -1,24 +1,32 @@
-import json
-import boto3
-
-from algotrader.config import aws as aws_config
 from algotrader.order.manager import OrderManager
-from algotrader.signal import TradeSignal
-from algotrader import logger
+from algotrader.signal.file import SourceFile
+from algotrader.signal.sqs import SourceSQS
 
 
 class Receiver():
 
-    def __init__(self, storage, exchange):
-        sqs = boto3.resource('sqs')
-        self.queue = sqs.get_queue_by_name(QueueName=aws_config['sqs']['queue-name'])
+    def __init__(self, storage, exchange, source, filename=None):
         self.order_manager = OrderManager(storage, exchange)
+        self.source_dict = {
+            'sqs': SourceSQS,
+            'file': SourceFile,
+        }
+        self.filename = filename
+        self.source = source
+        self._get_source()
+
+    def _get_source(self):
+        source_cls = self.source_dict[self.source]
+        if self.source == 'file':
+            self.source = source_cls(self.order_manager, filename=self.filename)
+        elif self.source == 'sqs':
+            self.source = source_cls()
 
     # TODO: Re-consider signal structure. Remove duplications, rename order_id to signal_id etc.
     def consume(self):
         """
             Process the given signal.
-            Ex signal;
+            Example signal;
             {
                 "order_id": "ETH-USD_coinbase_1543359420",
                 "product_id": "ETH-USD",
@@ -27,17 +35,4 @@ class Receiver():
                 "size": "all"
             }
         """
-        # TODO: Params should be a config.
-        messages = self.queue.receive_messages(MaxNumberOfMessages=10, WaitTimeSeconds=5)
-        for message in messages:
-            signal_dict = json.loads(message.body)
-            logger.info('Received message %s', signal_dict)
-
-            trade_signal = TradeSignal(signal_id=signal_dict['order_id'],
-                                       product_id=signal_dict['product_id'],
-                                       order_type=signal_dict['type'],
-                                       side=signal_dict['side'],
-                                       size=signal_dict['size'])
-
-            self.order_manager.process(trade_signal)
-            message.delete()
+        self.source.consume()

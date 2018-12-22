@@ -21,6 +21,11 @@ def main():
                         type=str.lower,
                         help='Workers')
     parser.add_argument('--database', help='Database', default='mongodb')  # TODO: make this constant.
+    parser.add_argument('--signal-source',
+                        choices=['file', 'sqs'],
+                        help='Signal source',
+                        default='sqs')  # TODO: make this constant.
+    parser.add_argument('--filename', help='JSON formatted file as a file source')
     parser.add_argument('--exchange',
                         help='Exchange check orders',
                         choices='coinbase',
@@ -38,7 +43,7 @@ def main():
     # TODO: should be more readable.
     if args.worker == 'signal-consumer':
         logger.info('Starting signal consumer...')
-        receiver = Receiver(storage_manager, args.exchange)
+        receiver = Receiver(storage_manager, args.exchange, args.signal_source, filename=args.filename)
         while True:
             receiver.consume()
     elif args.worker == 'order-checker':
