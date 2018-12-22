@@ -1,6 +1,6 @@
 from algotrader.order.manager import OrderManager
-from algotrader.signal.file import SourceFile
-from algotrader.signal.sqs import SourceSQS
+from algotrader.signal.source.file import SourceFile
+from algotrader.signal.source.sqs import SourceSQS
 
 
 class Receiver():
