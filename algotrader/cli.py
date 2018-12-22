@@ -25,7 +25,7 @@ def main():
                         choices=['file', 'sqs'],
                         help='Signal source',
                         default='sqs')  # TODO: make this constant.
-    parser.add_argument('--filename', help='JSON formatted file as a file source')
+    parser.add_argument('--filename', help='JSON formatted file as a file source')  # TODO: Too implicit name, rename.
     parser.add_argument('--log-file', help='Log file name')
     parser.add_argument('--exchange',
                         help='Exchange check orders',
