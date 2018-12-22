@@ -1,10 +1,10 @@
 from pymongo import MongoClient
 
-from algotrader.storage import StorageBase
+from algotrader.storage import BaseStorage
 from algotrader.storage.mongodb.models import Signal, Order
 
 
-class MongoDB(StorageBase):
+class MongoDB(BaseStorage):
 
     def __init__(self):
         # TODO: Should be config and param.
