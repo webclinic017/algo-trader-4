@@ -1,20 +1,32 @@
 from algotrader import logger
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
+from algotrader.storage.manager import StorageManager
 
 
 class OrderChecker():
 
-    def __init__(self, storage):
-        self.coinbase_adapter = CoinbaseAdapter()
+    def __init__(self, storage: StorageManager, exchange):
+        self.exchange_dict = {
+            'coinbase': CoinbaseAdapter,
+        }
+        self.exchange = exchange
+        self.exchange_adapter = None
+        self._get_exchange_adapter()
         self.storage = storage
+
+    # TODO: Should be able to work with more than one exchange.
+    def _get_exchange_adapter(self):
+        adapter_cls = self.exchange_dict[self.exchange]
+        # TODO: Rename
+        self.exchange_adapter = adapter_cls()
 
     def check_orders(self):
         statuses = ['pending', 'open']  # These should be constant and global.
         orders = self.storage.get_orders(statuses)
 
         for order in orders:
-            order_result = self.coinbase_adapter.get_order(order.id)
-            coinbase_fills = self.coinbase_adapter.get_fills(order_result['id'])
+            order_result = self.excchange_adapter.get_order(order.id)
+            coinbase_fills = self.exchange_adapter.get_fills(order_result['id'])
             persisted_fills = order.get('fills')
             new_fills = self._get_different_fills(coinbase_fills, persisted_fills)
 
