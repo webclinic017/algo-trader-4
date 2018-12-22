@@ -27,7 +27,7 @@ class OrderChecker():
 
         for order in orders:
             # TODO: order_result['id'] already in db, decrease API calls.
-            order_result = self.excchange_adapter.get_order(order.id)
+            order_result = self.exchange_adapter.get_order(order.id)
             coinbase_fills = self.exchange_adapter.get_fills(order_result['id'])
             persisted_fills = order.get('fills')
             new_fills = self._get_different_fills(coinbase_fills, persisted_fills)
