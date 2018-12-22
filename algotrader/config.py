@@ -11,7 +11,10 @@ coinbase = {
         "ltc": "e6f22960-1ddc-4f00-a095-8ed435456176",
         "eth": "6090e7d3-5e9a-4f58-9619-4b4e146fdf50",
         "usd": "e6a8d351-027e-487f-94e7-985a9a075090"
-    }
+    },
+    'passphrase': 'bf4zovy42ca',
+    'secret_key': 'K+0gUKEBKTZ0SWIqq3PxVjCjvf+HTPAnnffW/aCDtlbYxKDBKM2Mec8Apfr3oxrV4x6urdvoXye5oBJuC/6XOA==',
+    'access_key': '309832aa37a7698c9e1e63fd4322a094',
 }  # type: Dict[str, Any]
 
 aws = {

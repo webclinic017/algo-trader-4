@@ -15,6 +15,7 @@ class OrderManager():
         }
         self.exchange = exchange
         self.storage = storage
+        self._get_exchange_adapter()
 
     # TODO: DRY
     def _get_exchange_adapter(self):

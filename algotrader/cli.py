@@ -31,7 +31,7 @@ def main():
                         help='Exchange check orders',
                         choices='coinbase',
                         type=str.lower,
-                        default=['coinbase'])  # TODO: Make this constant. (Should be a list of exchanges)
+                        default='coinbase')  # TODO: Make this constant. (Should be a list of exchanges)
     args = parser.parse_args()
 
     setup_logging(args.logging_level, filename=args.log_file)
@@ -40,6 +40,7 @@ def main():
     storage_manager = StorageManager(storage=args.database)
     logger.info('Starting storage => %s', storage_manager)
     logger.info('Exchange => %s', args.exchange)
+    logger.info('Signal source => %s', args.signal_source)
 
     # TODO: should be more readable.
     if args.worker == 'signal-consumer':

@@ -1,8 +1,4 @@
-import json
-import boto3
-
 from algotrader.exchange.coinbase.client import CoinbaseClient
-from algotrader.config import aws as aws_config
 from algotrader.config import coinbase as coinbase_config
 from algotrader.exchange import BaseAdapter
 
@@ -14,18 +10,10 @@ class CoinbaseAdapter(BaseAdapter):
         self.client = CoinbaseClient(self.access_key, self.secret_key, self.passphrase, self.url)
 
     def _get_credentials(self):
-        # Get s3 client.
-        s3_client = boto3.resource('s3')
-
-        # Get coinbase credentials.
-        s3_object = s3_client.Object(aws_config['s3']['bucket'], aws_config['s3']['key'])
-        s3_config = json.loads(s3_object.get()['Body'].read().decode('utf-8'))
-
         # Set credentials.
-        # TODO: Re-structure these on S3, such as coninbase['accessKey']
-        self.access_key = s3_config['accessKey']
-        self.secret_key = s3_config['secretKey']
-        self.passphrase = s3_config['passphrase']
+        self.access_key = coinbase_config['access_key']
+        self.secret_key = coinbase_config['secret_key']
+        self.passphrase = coinbase_config['passphrase']
         self.url = coinbase_config['url']
 
     def get_accounts(self):
@@ -72,6 +60,9 @@ class CoinbaseAdapter(BaseAdapter):
 
     def get_fills(self, order_id):
         response = self.client.get_fills(order_id)
+        if not response:
+            return
+
         return response.json()
 
     def submit_order(self, order):
@@ -93,4 +84,7 @@ class CoinbaseAdapter(BaseAdapter):
         'type': 'market'}
         """
         response = self.client.submit_order(order)
+        if not response:
+            return
+
         return response.json()
