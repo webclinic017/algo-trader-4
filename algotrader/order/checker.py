@@ -35,7 +35,7 @@ class OrderChecker():
             if not new_fills:
                 continue
 
-            logger.info('New Fills: ' + str(new_fills))
+            logger.info('New Fills: %s', new_fills)
             self.storage.update(order.id, new_fills, order.status)  # TODO: order.status or order_result status?
 
     def _get_new_fills(self, coinbase_fills: list, persisted_fills: list):
