@@ -31,7 +31,7 @@ class CoinbaseAdapter():
         response = self.client.get_accounts()
         return response.json()
 
-    def get_account(self, account_id):
+    def get_account(self, currency):
         """
         Example account response;
         {
@@ -43,6 +43,7 @@ class CoinbaseAdapter():
             'profile_id': 'a6c82597-f923-4e68-a255-21ce5791c8ea'
          }
         """
+        account_id = coinbase_config['accounts'][currency]
         response = self.client.get_account(account_id)
         return response.json()
 

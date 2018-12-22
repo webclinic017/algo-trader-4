@@ -3,6 +3,7 @@ from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
 from algotrader.storage.manager import StorageManager
 
 
+# TODO: Get rid of coinbase specific code.
 class OrderChecker():
 
     def __init__(self, storage: StorageManager, exchange):

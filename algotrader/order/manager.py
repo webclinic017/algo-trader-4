@@ -1,14 +1,12 @@
 from decimal import Decimal, ROUND_DOWN
 
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
-from algotrader.config import coinbase as coinbase_config
 from algotrader.signal import TradeSignal, TradeOrder
 from algotrader.storage.manager import StorageManager
 from algotrader import storage
 from algotrader import logger
 
 
-# TODO: Get rid of coinbase specific code.
 class OrderManager():
 
     def __init__(self, storage: StorageManager, exchange):
@@ -29,7 +27,7 @@ class OrderManager():
         storage.create_signal(trade_signal)
 
         # TODO: Get rid of exchange-specific logic.
-        account = self.exchange_adapter.get_account(coinbase_config['accounts'][trade_signal.currency])
+        account = self.exchange_adapter.get_account(trade_signal.currency)
 
         # TODO: Can process only size='all'
         # get maximum amount of balance with scale of 8 digits and rounding down it.
@@ -43,25 +41,25 @@ class OrderManager():
         }
         logger.info('Submitting order: %s', order)
 
-        coinbase_order = self.exchange_adapter.submit_order(order)
-        if coinbase_order is None:
-            logger.error('Coinbase_order is None')
+        submitted_order = self.exchange_adapter.submit_order(order)
+        if submitted_order is None:
+            logger.error('Submitted order is None!')
             return
 
-        logger.info('Received order: %s', coinbase_order)
+        logger.info('Received order: %s', submitted_order)
 
         # TODO: Are all timestamps UTC?
         trade_order = TradeOrder(
             trade_signal.order_id,
-            coinbase_order['id'],  # TODO: Coinbase specific. Make this more generic.
-            coinbase_order.get('price'),
-            coinbase_order['side'],
-            coinbase_order['size'],
-            coinbase_order['product_id'],
-            coinbase_order['created_at'],
-            coinbase_order.get('done_at'),
-            coinbase_order['status'],
-            coinbase_order['type']
+            submitted_order['id'],  # TODO: Coinbase specific. Make this more generic.
+            submitted_order.get('price'),
+            submitted_order['side'],
+            submitted_order['size'],
+            submitted_order['product_id'],
+            submitted_order['created_at'],
+            submitted_order.get('done_at'),
+            submitted_order['status'],
+            submitted_order['type']
         )
         storage.create_order(trade_order)
 
