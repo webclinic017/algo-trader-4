@@ -45,8 +45,7 @@ def main():
     if args.worker == 'signal-consumer':
         logger.info('Starting signal consumer...')
         receiver = Receiver(storage_manager, args.exchange, args.signal_source, filename=args.filename)
-        while True:
-            receiver.consume()
+        receiver.consume()
     elif args.worker == 'order-checker':
         logger.info('Starting order checker...')
         order_checker = OrderChecker(storage_manager, args.exchange)
