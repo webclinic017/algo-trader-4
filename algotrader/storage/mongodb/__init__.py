@@ -23,7 +23,7 @@ class MongoDB(BaseStorage):
     def create_signal(self, trade_signal):
         signal = Signal(signal_id=trade_signal.signal_id,
                         product_id=trade_signal.product_id,
-                        order_type=trade_signal.type,
+                        order_type=trade_signal.order_type,
                         side=trade_signal.side,
                         size=trade_signal.size)
         signal.save()

@@ -3,7 +3,6 @@ from decimal import Decimal, ROUND_DOWN
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
 from algotrader.signal import TradeSignal, TradeOrder
 from algotrader.storage.manager import StorageManager
-from algotrader import storage
 from algotrader import logger
 
 
@@ -24,7 +23,7 @@ class OrderManager():
         self.exchange_adapter = adapter_cls()
 
     def process(self, trade_signal: TradeSignal):
-        storage.create_signal(trade_signal)
+        self.storage.create_signal(trade_signal)
 
         # TODO: Get rid of exchange-specific logic.
         account = self.exchange_adapter.get_account(trade_signal.currency)
@@ -61,7 +60,7 @@ class OrderManager():
             submitted_order['status'],
             submitted_order['type']
         )
-        storage.create_order(trade_order)
+        self.storage.create_order(trade_order)
 
     def get_order(self, order_obj):
         response = self.adapter.get_order(order_obj['order_id'])

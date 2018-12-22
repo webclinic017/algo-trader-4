@@ -8,8 +8,8 @@ from algotrader import logger
 
 class SourceSQS():
     def __init__(self, order_manager):
-        sqs = boto3.resource('sqs')
         self.order_manager = order_manager
+        sqs = boto3.resource('sqs')
         self.queue = sqs.get_queue_by_name(QueueName=aws_config['sqs']['queue-name'])
 
     def consume(self):

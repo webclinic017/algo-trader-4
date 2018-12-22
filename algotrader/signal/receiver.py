@@ -20,7 +20,7 @@ class Receiver():
         if self.source == 'file':
             self.source = source_cls(self.order_manager, filename=self.filename)
         elif self.source == 'sqs':
-            self.source = source_cls()
+            self.source = source_cls(self.order_manager)
 
     # TODO: Re-consider signal structure. Remove duplications, rename order_id to signal_id etc.
     def consume(self):

@@ -19,6 +19,10 @@ class TradeSignal():
         return self._order_type
 
     @property
+    def signal_id(self):
+        return self._signal_id
+
+    @property
     def side(self):
         return self._side
 
