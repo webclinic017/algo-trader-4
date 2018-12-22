@@ -26,6 +26,7 @@ def main():
                         help='Signal source',
                         default='sqs')  # TODO: make this constant.
     parser.add_argument('--filename', help='JSON formatted file as a file source')
+    parser.add_argument('--log-file', help='Log file name')
     parser.add_argument('--exchange',
                         help='Exchange check orders',
                         choices='coinbase',
@@ -33,7 +34,7 @@ def main():
                         default=['coinbase'])  # TODO: Make this constant. (Should be a list of exchanges)
     args = parser.parse_args()
 
-    setup_logging(args.logging_level)
+    setup_logging(args.logging_level, filename=args.log_file)
 
     # Create storage manager.
     storage_manager = StorageManager(storage=args.database)

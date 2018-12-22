@@ -7,7 +7,7 @@ from algotrader import logger
 FORMAT = "[%(asctime)s] Thread(%(threadName)s) %(levelname)s %(name)s:%(funcName)s:%(lineno)s - %(message)s"
 
 
-def setup_logging(level):
+def setup_logging(level, filename=None):
     level = getattr(logging, level.upper())
     h = logging.StreamHandler()
     h.setLevel(level)
@@ -15,7 +15,8 @@ def setup_logging(level):
     logger.setLevel(level)
     logger.addHandler(h)
 
-    trfh = logging.handlers.TimedRotatingFileHandler('/var/logs/algotrader.log', 'h', 1, 100)
-    trfh.setLevel(level)
-    trfh.setFormatter(logging.Formatter(FORMAT))
-    logger.addHandler(trfh)
+    if filename:
+        trfh = logging.handlers.TimedRotatingFileHandler(filename, 'h', 1, 100)
+        trfh.setLevel(level)
+        trfh.setFormatter(logging.Formatter(FORMAT))
+        logger.addHandler(trfh)
