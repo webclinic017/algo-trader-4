@@ -4,9 +4,10 @@ import boto3
 from algotrader.exchange.coinbase.client import CoinbaseClient
 from algotrader.config import aws as aws_config
 from algotrader.config import coinbase as coinbase_config
+from algotrader.exchange import BaseAdadapter
 
 
-class CoinbaseAdapter():
+class CoinbaseAdapter(BaseAdadapter):
 
     def __init__(self):
         self._get_credentials()
