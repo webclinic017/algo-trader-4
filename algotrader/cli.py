@@ -38,7 +38,7 @@ def main():
     # TODO: should be more readable.
     if args.worker == 'signal-consumer':
         logger.info('Starting signal consumer...')
-        receiver = Receiver(storage_manager)
+        receiver = Receiver(storage_manager, args.exchange)
         while True:
             receiver.consume()
     elif args.worker == 'order-checker':
