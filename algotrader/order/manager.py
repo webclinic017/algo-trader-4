@@ -7,7 +7,7 @@ from algotrader import logger
 
 
 class OrderManager():
-    exchange_dict = {
+    exchange_types = {
         'coinbase': CoinbaseAdapter,
     }
 
@@ -20,7 +20,7 @@ class OrderManager():
         self._get_exchange()
 
     def _get_exchange(self):
-        adapter_cls = self.exchange_dict[self._exchange]
+        adapter_cls = self.exchange_types[self._exchange]
         self.exchange = adapter_cls()
 
     def process(self, trade_signal: TradeSignal):

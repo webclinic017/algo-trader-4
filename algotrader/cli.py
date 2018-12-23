@@ -25,7 +25,7 @@ def main():
                         help='Database',
                         default='mongodb')
     parser.add_argument('--signal-source',
-                        choices=Receiver.source_dict.keys(),
+                        choices=Receiver.source_types.keys(),
                         help='Signal source',
                         default='sqs')
     parser.add_argument('--source-filename',
@@ -36,7 +36,7 @@ def main():
                         help='Config file')
     parser.add_argument('--exchange',
                         help='Exchange check orders',
-                        choices=OrderManager.exchange_dict.keys(),
+                        choices=OrderManager.exchange_types.keys(),
                         type=str.lower,
                         default='coinbase')
     args = parser.parse_args()

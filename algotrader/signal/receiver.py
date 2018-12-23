@@ -4,7 +4,7 @@ from algotrader.signal.source.sqs import SourceSQS
 
 
 class Receiver():
-    source_dict = {
+    source_types = {
         'sqs': SourceSQS,
         'file': SourceFile,
     }
@@ -17,7 +17,7 @@ class Receiver():
         self._get_source()
 
     def _get_source(self):
-        source_cls = self.source_dict[self.source]
+        source_cls = self.source_types[self.source]
         if self.source == 'file':
             self.source = source_cls(self.order_manager, filename=self.filename)
         elif self.source == 'sqs':
