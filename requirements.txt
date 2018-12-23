@@ -7,3 +7,4 @@ mypy==0.550
 flake8==3.6.0
 ptpython==2.0.4
 PyYAML==3.13
+docutils==0.14
