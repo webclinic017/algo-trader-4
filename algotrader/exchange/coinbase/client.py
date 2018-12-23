@@ -55,6 +55,7 @@ class CoinbaseClient():
         url = self.url + path
         try:
             response = requests.request(method, url, json=data, headers=headers)
+            logger.info("Response: " + str(response.content))
         except Exception as e:
             logger.error('Error during connection %s', e)
             return

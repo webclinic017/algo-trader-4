@@ -30,7 +30,10 @@ class OrderManager():
 
         # TODO: Can process only size='all'
         # get maximum amount of balance with scale of 8 digits and rounding down it.
-        order_size = Decimal(account['balance']).quantize(Decimal('.0001'), rounding=ROUND_DOWN)
+        if trade_signal.size == 'all':
+            order_size = Decimal(account['balance']).quantize(Decimal('.0001'), rounding=ROUND_DOWN)
+        else:
+            order_size = trade_signal.size
 
         order = {
             'size': str(order_size),

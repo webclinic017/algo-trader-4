@@ -54,8 +54,9 @@ class TradeSignal():
 class TradeOrder():
 
     # TODO: Too many params.
-    def __init__(self, order_id, price, side, size, product_id, created_at, done_at, status, _type):
-        self.signal_id = order_id
+    def __init__(self, signal_id, order_id, price, side, size, product_id, created_at, done_at, status, _type):
+        self.signal_id = signal_id
+        self.order_id = order_id
         self.price = price
         self.side = side
         self.size = size

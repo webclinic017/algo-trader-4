@@ -29,8 +29,8 @@ class MongoDB(BaseStorage):
 
     def create_order(self, trade_order):
         order = Order(
-            signal_id=trade_order.order_id,
-            order_id=trade_order.id,  # TODO: Coinbase specific. Make this more generic.
+            signal_id=trade_order.signal_id,
+            order_id=trade_order.order_id,  # TODO: Coinbase specific. Make this more generic.
             price=trade_order.price,
             side=trade_order.side,
             size=trade_order.size,
