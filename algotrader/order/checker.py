@@ -41,7 +41,8 @@ class OrderChecker():
         """
         Find all different fill objects by comparing two lists where one is from exchange and the other one is from db.
         """
-        exchange_fills = set(exchange_fills)
-        db_fills = set(persisted_fills)
+        exchange_fills = set([fill['trade_id'] for fill in exchange_fills])
+        db_fills = set([fill['trade_id'] for fill in persisted_fills])
+        diff = list(exchange_fills.difference(db_fills))
 
-        return list(exchange_fills.difference(db_fills))
+        return [fill for fill in exchange_fills if fill['id'] in diff]
