@@ -4,7 +4,7 @@ import argparse
 from algotrader import logger
 from algotrader.logging import setup_logging
 from algotrader.signal.receiver import Receiver
-from algotrader.order.checker import OrderChecker
+from algotrader.order.manager import OrderManager
 from algotrader.storage.manager import StorageManager
 
 
@@ -49,9 +49,9 @@ def main():
         receiver.consume()
     elif args.worker == 'order-checker':
         logger.info('Starting order checker...')
-        order_checker = OrderChecker(storage_manager, args.exchange)
+        order_manager = OrderManager(storage_manager, args.exchange)
         while True:
-            order_checker.check_orders()
+            order_manager.check_orders()
             logger.info('Sleeping for 5 seconds...')
             time.sleep(5)
 
