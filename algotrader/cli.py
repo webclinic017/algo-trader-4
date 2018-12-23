@@ -48,22 +48,28 @@ def main():
 
     # Create storage manager.
     storage_manager = StorageManager(storage=args.database)
+
     logger.info('Starting storage => %s', storage_manager)
     logger.info('Exchange => %s', args.exchange)
     logger.info('Signal source => %s', args.signal_source)
 
-    # TODO: should be more readable.
     if args.worker == 'signal-consumer':
         logger.info('Starting signal consumer...')
         receiver = Receiver(storage_manager, args.exchange, args.signal_source, filename=args.filename)
         receiver.consume()
-    elif args.worker == 'order-checker':
+        logger.info('Exiting..')
+        return
+
+    if args.worker == 'order-checker':
         logger.info('Starting order checker...')
         order_manager = OrderManager(storage_manager, args.exchange)
         while True:
             order_manager.check_orders()
             logger.info('Sleeping for 5 seconds...')
             time.sleep(5)
+
+        logger.info('Exiting..')
+        return
 
 
 if __name__ == '__main__':
