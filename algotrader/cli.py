@@ -10,7 +10,6 @@ from algotrader.storage.manager import StorageManager
 
 
 def main():
-    # TODO: Add source argument such as SQS or file (for test purposes)
     parser = argparse.ArgumentParser()
     parser.add_argument('--logging-level',
                         default='info',

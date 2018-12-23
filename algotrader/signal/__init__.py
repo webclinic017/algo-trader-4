@@ -1,6 +1,5 @@
 
 
-# TODO: Write __repr__ method.
 class TradeSignal():
 
     def __init__(self, signal_id=None, product_id=None, order_type=None, side=None, size=None):
@@ -10,6 +9,13 @@ class TradeSignal():
         self._side = side
         self._size = size
         self._process_curencies()
+
+    def __repr__(self):
+        return 'TradeSignal <ID: %s , Product-ID: %s, Order-Type: %s, Side: %s, Size: %s>' % (self._signal_id,
+                                                                                              self._product_id,
+                                                                                              self._order_type,
+                                                                                              self._side,
+                                                                                              self._size)
 
     def _process_curencies(self):
         self.base_currency, self.quote_currency = self.product_id.lower().split('-')
@@ -43,7 +49,6 @@ class TradeSignal():
         return self.base_currency
 
 
-# TODO: Write __repr__ method.
 # TODO: Too generic name, rename it.
 class TradeOrder():
 
@@ -58,3 +63,10 @@ class TradeOrder():
         self.done_at = done_at
         self.status = status
         self.type = _type
+
+    def __repr__(self):
+        return 'TradeOrder <Signal-ID: %s , Price: %s, Product-ID: %s, CreatedAt: %s, DoneAt: %s>' % (self.signal_id,
+                                                                                                      self.price,
+                                                                                                      self.product_id,
+                                                                                                      self.created_at,
+                                                                                                      self.done_at)
