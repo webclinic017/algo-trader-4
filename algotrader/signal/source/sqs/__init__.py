@@ -14,8 +14,8 @@ class SourceSQS():
 
     def consume(self):
         while True:
-            # TODO: Params should be a config.
-            messages = self.queue.receive_messages(MaxNumberOfMessages=10, WaitTimeSeconds=5)
+            messages = self.queue.receive_messages(MaxNumberOfMessages=config['aws']['sqs']['max_number_of_messages'],
+                                                   WaitTimeSeconds=config['aws']['sqs']['wait_time_seconds'])
             for message in messages:
                 signal_dict = json.loads(message.body)
                 logger.info('Received message %s', signal_dict)

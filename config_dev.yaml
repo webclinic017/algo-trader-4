@@ -18,6 +18,8 @@
 
   "sqs":
     "queue-name": "algo_trading_test_queue.fifo"
+    "max_number_of_messages": 10
+    "wait_time_seconds": 5
 
 "db":
   "mongodb":

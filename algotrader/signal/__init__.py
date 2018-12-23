@@ -2,6 +2,8 @@
 
 class TradeSignal():
 
+    BUY_SIDE = 'buy'
+
     def __init__(self, signal_id=None, product_id=None, order_type=None, side=None, size=None):
         self._signal_id = signal_id
         self._product_id = product_id
@@ -42,8 +44,7 @@ class TradeSignal():
 
     @property
     def currency(self):
-        # TODO: Make this string a global contant.
-        if self.side == 'buy':
+        if self.side == self.BUY_SIDE:
             return self.quote_currency
 
         return self.base_currency
