@@ -4,13 +4,14 @@ from algotrader.signal.source.sqs import SourceSQS
 
 
 class Receiver():
+    source_dict = {
+        'sqs': SourceSQS,
+        'file': SourceFile,
+    }
 
     def __init__(self, storage, exchange, source, filename=None):
         self.order_manager = OrderManager(storage, exchange)
-        self.source_dict = {
-            'sqs': SourceSQS,
-            'file': SourceFile,
-        }
+
         self.filename = filename
         self.source = source
         self._get_source()

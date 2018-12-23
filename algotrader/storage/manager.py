@@ -6,14 +6,20 @@ from algotrader.storage.mongodb import MongoDB
 
 # TODO: Transform return result into a common class.
 class StorageManager():
+    storage_types = {
+        'mongodb': MongoDB,
+    }
+
     def __init__(self, storage):
-        # TODO: Add new storage types.
-        # TODO: Should be constant.
-        if storage == 'mongodb':
-            self.storage = MongoDB()
+        self._storage = storage
+        self._set_storage()
 
     def __repr__(self):
         return '<Storage: %s >' % (self.storage)
+
+    def _set_storage(self):
+        storage_cls = self.storage_types[self._storage]
+        self.storage = storage_cls()
 
     def create_signal(self, trade_signal: TradeSignal):
         logger.info('Creating signal %s', trade_signal)

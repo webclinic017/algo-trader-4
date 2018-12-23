@@ -14,7 +14,6 @@ class SourceFile():
             signal_dict = json.load(f)
             logger.info('Received signal: %s', signal_dict)
 
-            # TODO: DRY
             trade_signal = TradeSignal(signal_id=signal_dict['order_id'],
                                        product_id=signal_dict['product_id'],
                                        order_type=signal_dict['type'],

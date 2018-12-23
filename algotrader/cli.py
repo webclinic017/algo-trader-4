@@ -20,11 +20,14 @@ def main():
                         choices=['signal-consumer', 'order-checker'],
                         type=str.lower,
                         help='Workers')
-    parser.add_argument('--database', help='Database', default='mongodb')  # TODO: make this constant.
+    parser.add_argument('--database',
+                        choices=StorageManager.storage_types.keys(),
+                        help='Database',
+                        default='mongodb')
     parser.add_argument('--signal-source',
-                        choices=['file', 'sqs'],
+                        choices=Receiver.source_dict.keys(),
                         help='Signal source',
-                        default='sqs')  # TODO: make this constant.
+                        default='sqs')
     parser.add_argument('--filename', help='JSON formatted file as a file source')  # TODO: Too implicit name, rename.
     parser.add_argument('--log-file', help='Log file name')
     parser.add_argument('--config-file',
