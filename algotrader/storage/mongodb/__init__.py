@@ -3,18 +3,21 @@ from pymongo import MongoClient
 
 from algotrader.storage import BaseStorage
 from algotrader.storage.mongodb.models import Signal, Order
-from algotrader.config import db as db_config
+from algotrader.config import config
 
 
 class MongoDB(BaseStorage):
 
     def __init__(self):
         connect('algotrader')
-        client = MongoClient(db_config['mongodb']['host'], db_config['mongodb']['port'])
-        self.db = client.get_database(db_config['mongodb']['database'])
+        self.host = config['db']['mongodb']['host']
+        self.port = config['db']['mongodb']['port']
+        self.database = config['db']['mongodb']['database']
+        client = MongoClient(self.host, self.port)
+        self.db = client.get_database(self.database)
 
     def __repr__(self):
-        return 'MongoDB <Host: %s , Port: %s, Collection: %s>' % (self.host, self.port, self.collection)
+        return 'MongoDB <Host: %s , Port: %s, Database: %s>' % (self.host, self.port, self.database)
 
     def create_signal(self, trade_signal):
         signal = Signal(signal_id=trade_signal.signal_id,

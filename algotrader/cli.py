@@ -2,6 +2,7 @@ import time
 import argparse
 
 from algotrader import logger
+from algotrader.config import load_config
 from algotrader.logging import setup_logging
 from algotrader.signal.receiver import Receiver
 from algotrader.order.manager import OrderManager
@@ -27,6 +28,9 @@ def main():
                         default='sqs')  # TODO: make this constant.
     parser.add_argument('--filename', help='JSON formatted file as a file source')  # TODO: Too implicit name, rename.
     parser.add_argument('--log-file', help='Log file name')
+    parser.add_argument('--config-file',
+                        type=str.lower,
+                        help='Config file')
     parser.add_argument('--exchange',
                         help='Exchange check orders',
                         choices=['coinbase'],
@@ -34,7 +38,11 @@ def main():
                         default='coinbase')  # TODO: Make this constant. (Should be a list of exchanges)
     args = parser.parse_args()
 
+    # Logging setup
     setup_logging(args.logging_level, filename=args.log_file)
+
+    # Load config file
+    load_config(args.config_file)
 
     # Create storage manager.
     storage_manager = StorageManager(storage=args.database)

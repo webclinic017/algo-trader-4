@@ -7,4 +7,4 @@ Usage
 
 ::
 
-  python -m algotrader.cli --exchange coinbase --worker signal-consumer --filename test.json --signal-source file
+  python -m algotrader.cli --signal-source file --filename test.json --worker signal-consumer --config-file config_dev.yaml

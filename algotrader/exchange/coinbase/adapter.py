@@ -1,5 +1,5 @@
 from algotrader.exchange.coinbase.client import CoinbaseClient
-from algotrader.config import coinbase as coinbase_config
+from algotrader.config import config
 from algotrader.exchange import BaseAdapter
 
 
@@ -11,10 +11,10 @@ class CoinbaseAdapter(BaseAdapter):
 
     def _get_credentials(self):
         # Set credentials.
-        self.access_key = coinbase_config['access_key']
-        self.secret_key = coinbase_config['secret_key']
-        self.passphrase = coinbase_config['passphrase']
-        self.url = coinbase_config['url']
+        self.access_key = config['coinbase']['access_key']
+        self.secret_key = config['coinbase']['secret_key']
+        self.passphrase = config['coinbase']['passphrase']
+        self.url = config['coinbase']['url']
 
     def get_accounts(self):
         response = self.client.get_accounts()
@@ -32,7 +32,7 @@ class CoinbaseAdapter(BaseAdapter):
             'profile_id': 'a6c82597-f923-4e68-a255-21ce5791c8ea'
          }
         """
-        account_id = coinbase_config['accounts'][currency]
+        account_id = config['coinbase']['accounts'][currency]
         response = self.client.get_account(account_id)
         return response.json()
 
