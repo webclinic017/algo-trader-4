@@ -49,7 +49,7 @@ class OrderManager():
 
         # TODO: Are all timestamps UTC?
         trade_order = TradeOrder(
-            trade_signal.order_id,
+            trade_signal.signal_id,
             submitted_order['id'],  # TODO: Coinbase specific. Make this more generic.
             submitted_order.get('price'),
             submitted_order['side'],
