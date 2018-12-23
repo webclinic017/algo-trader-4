@@ -28,7 +28,8 @@ def main():
                         choices=Receiver.source_dict.keys(),
                         help='Signal source',
                         default='sqs')
-    parser.add_argument('--filename', help='JSON formatted file as a file source')  # TODO: Too implicit name, rename.
+    parser.add_argument('--source-filename',
+                        help='JSON formatted file as a file source')
     parser.add_argument('--log-file', help='Log file name')
     parser.add_argument('--config-file',
                         type=str.lower,
@@ -55,7 +56,7 @@ def main():
 
     if args.worker == 'signal-consumer':
         logger.info('Starting signal consumer...')
-        receiver = Receiver(storage_manager, args.exchange, args.signal_source, filename=args.filename)
+        receiver = Receiver(storage_manager, args.exchange, args.signal_source, filename=args.source_filename)
         receiver.consume()
         logger.info('Exiting..')
         return
