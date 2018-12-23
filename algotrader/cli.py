@@ -36,9 +36,9 @@ def main():
                         help='Config file')
     parser.add_argument('--exchange',
                         help='Exchange check orders',
-                        choices=['coinbase'],
+                        choices=OrderManager.exchange_dict.keys(),
                         type=str.lower,
-                        default='coinbase')  # TODO: Make this constant. (Should be a list of exchanges)
+                        default='coinbase')
     args = parser.parse_args()
 
     # Logging setup

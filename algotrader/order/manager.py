@@ -7,27 +7,26 @@ from algotrader import logger
 
 
 class OrderManager():
+    exchange_dict = {
+        'coinbase': CoinbaseAdapter,
+    }
+
+    STATUS_PENDING = 'pending'
+    STATUS_OPEN = 'open'
 
     def __init__(self, storage: StorageManager, exchange):
-        # TODO: DRY
-        self.exchange_dict = {
-            'coinbase': CoinbaseAdapter,
-        }
-        self.exchange = exchange
+        self._exchange = exchange
         self.storage = storage
-        self._get_exchange_adapter()
+        self._get_exchange()
 
-    # TODO: Should be able to work with more than one exchange.
-    def _get_exchange_adapter(self):
-        adapter_cls = self.exchange_dict[self.exchange]
-        # TODO: Rename
-        self.exchange_adapter = adapter_cls()
+    def _get_exchange(self):
+        adapter_cls = self.exchange_dict[self._exchange]
+        self.exchange = adapter_cls()
 
     def process(self, trade_signal: TradeSignal):
         self.storage.create_signal(trade_signal)
 
-        # TODO: Get rid of exchange-specific logic.
-        account = self.exchange_adapter.get_account(trade_signal.currency)
+        account = self.exchange.get_account(trade_signal.currency)
 
         # TODO: Can process only size='all'
         # get maximum amount of balance with scale of 8 digits and rounding down it.
@@ -41,7 +40,7 @@ class OrderManager():
         }
         logger.info('Submitting order: %s', order)
 
-        submitted_order = self.exchange_adapter.submit_order(order)
+        submitted_order = self.exchange.submit_order(order)
         if submitted_order is None:
             logger.error('Submitted order is None!')
             return
@@ -67,18 +66,14 @@ class OrderManager():
         response = self.adapter.get_order(order_obj['order_id'])
         return response
 
-    # TODO: Implement
-    def give_decision(self, order_response):
-        pass
-
     def check_orders(self):
-        statuses = ['pending', 'open']  # TODO: These should be constant and global.
+        statuses = [self.STATUS_PENDING, self.STATUS_OPEN]
         orders = self.storage.get_orders(statuses)
 
         for order in orders:
             # TODO: order_result['id'] already in db, decrease API calls.
-            order_result = self.exchange_adapter.get_order(order.id)
-            exchange_fills = self.exchange_adapter.get_fills(order_result['id'])
+            order_result = self.exchange.get_order(order.id)
+            exchange_fills = self.exchange.get_fills(order_result['id'])
             persisted_fills = order.get('fills')
             new_fills = self._get_different_fills(exchange_fills, persisted_fills)
 
