@@ -26,3 +26,11 @@ aws = {
             "queue-name": "algo_trading_test_queue.fifo"
         },
 }  # type: Dict[str, Dict[str, Any]]
+
+db = {
+    'mongodb': {
+        'host': 'localhost',
+        'port': 27017,
+        'database': 'algotrader',
+    }
+}

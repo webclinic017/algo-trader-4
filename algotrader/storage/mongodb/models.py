@@ -2,13 +2,9 @@ from mongoengine import (StringField,
                          DateTimeField,
                          BooleanField,
                          Document,
-                         connect,
                          EmbeddedDocument,
                          EmbeddedDocumentListField
                          )
-
-# TODO: Should be inside MongoDB init method.
-connect('algotrader')
 
 
 class Signal(Document):

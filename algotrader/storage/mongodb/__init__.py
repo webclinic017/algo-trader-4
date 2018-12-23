@@ -1,21 +1,17 @@
+from mongoengine import connect
 from pymongo import MongoClient
 
 from algotrader.storage import BaseStorage
 from algotrader.storage.mongodb.models import Signal, Order
+from algotrader.config import db as db_config
 
 
 class MongoDB(BaseStorage):
 
     def __init__(self):
-        # TODO: Should be config and param.
-        self.host = 'localhost'
-        self.port = 27017
-        self.db = 'algotrader'
-        self.collection = 'orders'
-
-        self.client = MongoClient(self.host, self.port)
-        self.db = self.client[self.db]
-        self.orders = self.db[self.collection]
+        connect('algotrader')
+        client = MongoClient(db_config['mongodb']['host'], db_config['mongodb']['port'])
+        self.db = client.get_database(db_config['mongodb']['database'])
 
     def __repr__(self):
         return 'MongoDB <Host: %s , Port: %s, Collection: %s>' % (self.host, self.port, self.collection)
@@ -45,7 +41,12 @@ class MongoDB(BaseStorage):
 
     def get_orders(self, statuses: list):
         expr = [{'status': status} for status in statuses]
-        return self.orders.find({'$or': expr})
+        orders = self.db.get_collection('orders')
+        return orders.find({'$or': expr})
+
+    def get_signals(self):
+        signals = self.db.get_collection('signals')
+        return signals.find()
 
     def update_order(self, _id, fills, status):
         self.orders.update(
