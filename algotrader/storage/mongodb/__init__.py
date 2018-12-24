@@ -51,8 +51,9 @@ class MongoDB(BaseStorage):
         signals = self.db.get_collection('signals')
         return signals.find()
 
-    def update_order(self, _id, fills, status):
-        self.orders.update(
-            {'order_id': _id},
+    def update_order(self, order_id, fills, status):
+        orders = self.db.get_collection('orders')
+        orders.update(
+            {'order_id': order_id},
             {'$push': {'fills': {'$each': fills}}, '$set': {'status': status}}
         )

@@ -1,4 +1,5 @@
 from decimal import Decimal, ROUND_DOWN
+import json
 
 from algotrader.exchange.coinbase.adapter import CoinbaseAdapter
 from algotrader.signal import TradeSignal, TradeOrder
@@ -74,17 +75,18 @@ class OrderManager():
         orders = self.storage.get_orders(statuses)
 
         for order in orders:
+            logger.info("Order: " + str(order))
             # TODO: order_result['id'] already in db, decrease API calls.
-            order_result = self.exchange.get_order(order.id)
+            order_result = self.exchange.get_order(order['order_id'])
             exchange_fills = self.exchange.get_fills(order_result['id'])
             persisted_fills = order.get('fills')
-            new_fills = self._get_different_fills(exchange_fills, persisted_fills)
+            new_fills = self._get_new_fills(exchange_fills, persisted_fills)
 
             if not new_fills:
                 continue
 
             logger.info('New Fills: %s', new_fills)
-            self.storage.update(order.id, new_fills, order.status)  # TODO: order.status or order_result status?
+            self.storage.update_order(order['order_id'], new_fills, order_result['status'])
 
     def _get_new_fills(self, exchange_fills: list, persisted_fills: list):
         """
@@ -94,4 +96,4 @@ class OrderManager():
         db_fill_set = set([fill['trade_id'] for fill in persisted_fills])
         diff_set = list(exc_fill_set.difference(db_fill_set))
 
-        return [fill for fill in exchange_fills if fill['id'] in diff_set]
+        return [fill for fill in exchange_fills if fill['trade_id'] in diff_set]
