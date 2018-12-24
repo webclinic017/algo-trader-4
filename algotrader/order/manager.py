@@ -90,8 +90,8 @@ class OrderManager():
         """
         Find all different fill objects by comparing two lists where one is from exchange and the other one is from db.
         """
-        exchange_fills = set([fill['trade_id'] for fill in exchange_fills])
-        db_fills = set([fill['trade_id'] for fill in persisted_fills])
-        diff = list(exchange_fills.difference(db_fills))
+        exc_fill_set = set([fill['trade_id'] for fill in exchange_fills])
+        db_fill_set = set([fill['trade_id'] for fill in persisted_fills])
+        diff_set = list(exc_fill_set.difference(db_fill_set))
 
-        return [fill for fill in exchange_fills if fill['id'] in diff]
+        return [fill for fill in exchange_fills if fill['id'] in diff_set]
