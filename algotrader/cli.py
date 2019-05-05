@@ -7,6 +7,7 @@ from algotrader.logging import setup_logging
 from algotrader.signal.receiver import Receiver
 from algotrader.order.manager import OrderManager
 from algotrader.storage.manager import StorageManager
+from algotrader.backtesting.import_historical_data import import_rates
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
                         type=str.lower,
                         help='Print logs')
     parser.add_argument('--worker',
-                        choices=['signal-consumer', 'order-checker'],
+                        choices=['signal-consumer', 'order-checker', 'backtesting-importer'],
                         type=str.lower,
                         help='Workers')
     parser.add_argument('--database',
@@ -71,6 +72,10 @@ def main():
 
         logger.info('Exiting..')
         return
+
+    if args.worker == 'backtesting-importer':
+        logger.info('Starting data importer')
+        import_rates()
 
 
 if __name__ == '__main__':

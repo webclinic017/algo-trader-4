@@ -65,6 +65,13 @@ class CoinbaseAdapter(BaseAdapter):
 
         return response.json()
 
+    def get_historic_rates(self, product_id: str, start: str, end: str, granularity: int):
+        response = self.client.get_historic_rates(product_id, start, end, granularity)
+        if not response:
+            return
+
+        return response.json()
+
     def submit_order(self, order):
         """
         Example order response;

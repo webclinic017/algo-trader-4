@@ -4,6 +4,7 @@ import hashlib
 import time
 import base64
 import requests
+from urllib.parse import urlencode, quote_plus
 
 from algotrader import logger
 
@@ -35,6 +36,17 @@ class CoinbaseClient():
         path = '/fills?order_id={order_id}'.format(order_id=order_id)
         return self._make_request('GET', path)
 
+    def get_historic_rates(self, product_id: str, start: str, end: str, granularity: int):
+        path_dict = {
+            'start': start,
+            'end': end,
+            'granularity': granularity
+        }
+        params = urlencode(path_dict, quote_via=quote_plus)
+        path = '/products/{product_id}/candles?'.format(product_id=product_id)
+        path = path + params
+        return self._make_request('GET', path)
+
     def _make_request(self, method, path, data=None):
         timestamp = str(time.time())
         message = timestamp + method + path
@@ -55,7 +67,7 @@ class CoinbaseClient():
         url = self.url + path
         try:
             response = requests.request(method, url, json=data, headers=headers)
-            logger.info("Response: " + str(response.content))
+            logger.debug("Response: " + str(response.content))
         except Exception as e:
             logger.error('Error during connection %s', e)
             return
@@ -64,7 +76,7 @@ class CoinbaseClient():
             response.raise_for_status()
         except requests.exceptions.HTTPError as e:
             logger.error('HTTP error %s', e)
-            print(e)
+            print(response.text)
             return
 
         return response

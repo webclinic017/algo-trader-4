@@ -35,3 +35,9 @@ class StorageManager():
     # TODO: Reconsider params.
     def update_order(self, _id, fills, status):
         self.storage.update_order(_id, fills, status)
+
+    def create_candle(self, time, low, high, open, close, volume, product_id, interval):
+        self.storage.create_candle(time, low, high, open, close, volume, product_id, interval)
+
+    def get_max_candle_by_time(self, product_id):
+        return self.storage.get_max_candle_by_time(product_id)

@@ -1,4 +1,4 @@
-
+from decimal import Decimal
 
 class BaseStorage():
 
@@ -15,4 +15,14 @@ class BaseStorage():
         raise NotImplementedError("Subclasses should implement this!")
 
     def update_order(self, _id: int, fills: list, status: str):
+        raise NotImplementedError("Subclasses should implement this!")
+
+    def create_candle(self,
+                      time: int,
+                      low: Decimal,
+                      high: Decimal,
+                      open: Decimal,
+                      close: Decimal,
+                      volume: Decimal,
+                      interval: int):
         raise NotImplementedError("Subclasses should implement this!")

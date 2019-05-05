@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from algotrader.storage import BaseStorage
 from algotrader.storage.mongodb.models import Signal, Order
 from algotrader.config import config
+from algotrader.backtesting.models import Candle
 
 
 class MongoDB(BaseStorage):
@@ -57,3 +58,24 @@ class MongoDB(BaseStorage):
             {'order_id': order_id},
             {'$push': {'fills': {'$each': fills}}, '$set': {'status': status}}
         )
+
+    def create_candle(self, time, low, high, open, close, volume, product_id, interval):
+        candle = Candle(
+            time=time,
+            low=low,
+            high=high,
+            open=open,
+            close=close,
+            volume=volume,
+            product_id=product_id,
+            interval=interval
+        )
+        candle.save()
+
+    def get_max_candle_by_time(self, product_id):
+        candles = self.db.get_collection('candles')
+        cursor = candles.find().sort([('time', -1)])
+        try:
+            return cursor.next()
+        except StopIteration:
+            return
